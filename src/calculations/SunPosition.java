@@ -7,10 +7,10 @@ import common.TrueDegree;
 
 public class SunPosition {
 
-    static double currentElevationDeg;
-    static double currentAzimuthDeg;
-    static String currentAzimuthString;
-    static double maxElevationDeg;
+    public static double currentElevationDeg;
+    public static double currentAzimuthDeg;
+    public static String currentAzimuthString;
+    public static double maxElevationDeg;
 
     public static void sunPosition() {
     	

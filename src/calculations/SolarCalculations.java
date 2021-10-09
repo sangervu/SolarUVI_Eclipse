@@ -113,21 +113,16 @@ public class SolarCalculations {
 			UvIndexEnd = timeSouth + uvIndexOverThree / 2;
 		}
 
-		// TimeFormat timeUvi = new TimeFormat(uvIndexEnd);
-		// this.UvIndexEndString = (TimeFormat.hourTimeString) + ":" +
-		// (TimeFormat.minuteTimeString);
+		UvIndexEndString = (TimeFormat.timeHour(UvIndexEnd)) + ":" + (TimeFormat.timeMinute(UvIndexEnd));
 
 	}
 
 	public static void SolarPower() {
 
 		double latitudeDeg = Location.latitude;
-		double T = MyStellarCalendar.T;
+
 		double currentSunElevationDeg = SunPosition.currentElevationDeg;
 		double maxSunElevationDeg = SunPosition.maxElevationDeg;
-
-		double latitudeRad = Math.toRadians(latitudeDeg);
-		double deltaSunRad = Math.toRadians(latitudeDeg);
 
 		// calculate max elevation of the sun in degrees
 		double elevationMax;
@@ -164,7 +159,5 @@ public class SolarCalculations {
 		} else {
 			currentSunRadiationPower = sunPower;
 		}
-
 	}
-
 }
