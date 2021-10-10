@@ -20,8 +20,7 @@ public class SolarCalculations {
 	public static double maxSunRadiationPowerAnnual;
 	public static double maxSunRadiationPowerDiurnal;
 	public static double currentSunRadiationPower;
-
-	private static String timeSouthString;
+	public static String timeSouthString;
 	private static double timeSouth;
 
 	public static void south() {
@@ -30,22 +29,18 @@ public class SolarCalculations {
 		double timeStellarNoonDeg = MyStellarCalendar.stellarTimeNoonDeg;
 
 		/* korkeimmillaan, eli etelässä */
-		double timeSouth = TrueDegree.minDegree(alfaDeg - timeStellarNoonDeg) * 24. / 360.;
-		timeSouthString = (TimeFormat.timeHour(timeSouth) + ":" + TimeFormat.timeMinute(timeSouth));
+		timeSouth = TrueDegree.minDegree(alfaDeg - timeStellarNoonDeg) * 24. / 360.;
+		timeSouthString = TimeFormat.timeHour(timeSouth) + ":" + TimeFormat.timeMinute(timeSouth);
 	}
 
 	public static void solarCalculations() {
-
+		
+		SolarCalculations.south();
 		double deltaSunDeg = ElementsSun.alfaSunDeg;
 		double latitudeDeg = Location.latitude;
 		double currentSunElevationDeg = SunPosition.currentElevationDeg;
 		double maxSunAltitudeDiurnalDeg = SunPosition.maxElevationDeg;
 
-		// double weakThermalLimitRad = Math.toRadians(17.5); // degrees in Sun
-		// elevation, empirical
-		// double strongThermalLimitRad = Math.toRadians(35.0); // degrees in Sun
-		// elevation, empirical
-		// double uvOverTwoLimitRad = Math.toRadians(90.0 - 55.0); //degrees in Sun
 		// elevation, UV
 		double uvOverThreeLimitRad = Math.toRadians(90.0 - 48.0); // degrees in Sun elevation, UV
 
@@ -53,30 +48,6 @@ public class SolarCalculations {
 		double currentSunElevationRad = Math.toRadians(currentSunElevationDeg);
 
 		double deltaSunRad = Math.toRadians(deltaSunDeg);
-
-		// thermalActivity = 2
-		// * Math.acos(-Math.tan(deltaSunRad) * Math.tan(latitudeRad)
-		// + Math.sin(weakThermalLimitRad) / (Math.cos(deltaSunRad) *
-		// Math.cos(latitudeRad)))
-		// / (2 * Math.PI) * 24;
-		// if (Double.isNaN(thermalActivity)) {
-		// thermalActivity = 0.;
-		// }
-		//
-		// thermalActivityStrong = 2
-		// * Math.acos(-Math.tan(deltaSunRad) * Math.tan(latitudeRad)
-		// + Math.sin(strongThermalLimitRad) / (Math.cos(deltaSunRad) *
-		// Math.cos(latitudeRad)))
-		// / (2 * Math.PI) * 24;
-		// if (Double.isNaN(thermalActivityStrong)) {
-		// thermalActivityStrong = 0.;
-		// }
-		//
-		// if (Double.isNaN(thermalActivity) || thermalActivity == 0) {
-		// thermalActivityEnd = 0.;
-		// } else {
-		// thermalActivityEnd = timeSouth + thermalActivity / 2;
-		// }
 
 		double a = 2.696056, b = 5.474571, c = -0.09888, d = 0.040392;
 		double m = 1. / Math.cos(Math.asin(6371. / 6393. * Math.sin((Math.PI / 2 - currentSunElevationRad))));
@@ -98,13 +69,14 @@ public class SolarCalculations {
 		UvIndexMax = MathNew.roundDesimal_1(MathNew.pow(Math.cos(Math.PI / 2 - maxSunAltitudeDiurnalRad), a)
 				* MathNew.exp(b + c * mMax + d * mMax * mMax) / 25.);
 
-		double uvIndexOverThree = 2
-				* Math.acos(-Math.tan(deltaSunRad) * Math.tan(latitudeRad)
-						+ Math.sin(uvOverThreeLimitRad) / (Math.cos(deltaSunRad) * Math.cos(latitudeRad)))
-				/ (2 * Math.PI) * 24;
+		double uvIndexOverThree = 2 * Math.acos(-Math.tan(deltaSunRad) * Math.tan(latitudeRad)
+						+ Math.sin(uvOverThreeLimitRad) / (Math.cos(deltaSunRad) * Math.cos(latitudeRad))) / (2 * Math.PI) * 24;
 
 		if (Double.isNaN(uvIndexOverThree)) {
 			UvIndexOverThree = 0.;
+		}
+		else {
+			UvIndexOverThree = uvIndexOverThree;
 		}
 
 		if (Double.isNaN(uvIndex) || uvIndexOverThree == 0) {
@@ -133,15 +105,15 @@ public class SolarCalculations {
 		} else {
 			elevationMax = 90 + latitudeDeg + 23.5;
 		}
-
+		
+		// Maximun solar power annual
 		double maxSunAltitudeAnnualRad = Math.toRadians(elevationMax); // max Sun elevation in Rad
-
 		double maxSunAltitudeDiurnalRad = Math.toRadians(maxSunElevationDeg);
 
 		maxSunRadiationPowerAnnual = MathNew.roundDesimal_1(1350.0 * Math.sin(maxSunAltitudeAnnualRad)
 				* MathNew.pow(0.78, (1 / Math.sin(maxSunAltitudeAnnualRad))));
 
-		// Maximun diurnal solar power
+		// Maximun solar power diurnal
 		double sunPower = MathNew.roundDesimal_1(1350.0 * Math.sin(maxSunAltitudeDiurnalRad)
 				* MathNew.pow(0.78, (1 / Math.sin(maxSunAltitudeDiurnalRad))));
 		if (sunPower < 0) {

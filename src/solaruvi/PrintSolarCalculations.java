@@ -2,6 +2,7 @@ package solaruvi;
 
 import calculations.SolarCalculations;
 import calculations.SunPosition;
+import common.Location;
 
 public class PrintSolarCalculations {
 	
@@ -21,11 +22,15 @@ public class PrintSolarCalculations {
 	    	double currentSolarRadiationPower = SolarCalculations.currentSunRadiationPower;
 	    	double maxSunRadiationPowerAnnual = SolarCalculations.maxSunRadiationPowerAnnual;
 	    	double maxSunRadiationPowerDiurnal = SolarCalculations.maxSunRadiationPowerDiurnal;
-	        
+	    	String timeSouthString = SolarCalculations.timeSouthString;
+	    	
+	    	System.out.println("at latitude: " + Location.latitude);
+	    	System.out.println("at longitude: " + Location.longitude);
 	        System.out.println("Sun current elevation: " + currentSunElevationDeg);
 	        System.out.println("Sun current azimuth: " + sunAzimuthDeg);
 	        System.out.println("Sun current azimuth: " + sunAzimuthString);
 	        System.out.println("Sun max elevation today: " + maxSunElevationDeg);
+	        System.out.println("Time of maximun elevation: " + timeSouthString);
 	        System.out.println("Current solar Power [W/m2]: " + currentSolarRadiationPower);
 	        System.out.println("Maximun solar Power this year [W/m2]: " + maxSunRadiationPowerAnnual);
 	        System.out.println("Maximum solar Power today [W/m2]: " + maxSunRadiationPowerDiurnal);
